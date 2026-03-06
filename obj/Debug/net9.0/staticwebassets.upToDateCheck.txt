@@ -1,2 +1,2 @@
 wwwroot\index.html
-C:\Users\valtu\Desktop\Kolosicin\wwwroot\index.html
+C:\Users\valtu\Desktop\Kolosnicyn\wwwroot\index.html

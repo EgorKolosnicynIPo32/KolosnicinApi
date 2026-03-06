@@ -1,6 +1,57 @@
-@CustomersApi_HostAddress = http://localhost:5023
+@baseUrl = https://localhost:7000
+@token = your-jwt-token-here
 
-GET {{CustomersApi_HostAddress}}/weatherforecast/
-Accept: application/json
+### Регистрация нового пользователя
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
 
-###
+{
+    "email": "newuser@example.com",
+    "password": "password123",
+    "name": "Новый Пользователь",
+    "address": "Москва, ул. Тестовая"
+}
+
+### Вход в систему
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "su@gmail.com",
+    "password": "password"
+}
+
+### Получить всех клиентов
+GET {{baseUrl}}/api/customer
+Authorization: Bearer {{token}}
+
+### Получить клиента по ID
+GET {{baseUrl}}/api/customer/1
+Authorization: Bearer {{token}}
+
+### Создать нового клиента
+POST {{baseUrl}}/api/customer
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Новый Клиент",
+    "email": "newclient@example.com",
+    "address": "Санкт-Петербург, Невский пр."
+}
+
+### Обновить клиента
+PUT {{baseUrl}}/api/customer/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "Обновленное Имя",
+    "email": "updated@example.com",
+    "address": "Новый адрес клиента"
+}
+
+### Удалить клиента
+DELETE {{baseUrl}}/api/customer/6
+Authorization: Bearer {{token}}

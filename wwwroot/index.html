@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CustomersAPI · Modern Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px;
+            color: #1a1f36;
+        }
+
+        /* Новый макет: вертикальная навигация + основной контент */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 25px;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* Левая панель навигации */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px 20px;
+            width: 280px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding-bottom: 25px;
+            border-bottom: 2px solid #eef2f6;
+            margin-bottom: 25px;
+        }
+
+            .sidebar-header h1 {
+                font-size: 1.8rem;
+                font-weight: 800;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                letter-spacing: -0.5px;
+            }
+
+            .sidebar-header p {
+                color: #64748b;
+                font-size: 0.9rem;
+                margin-top: 5px;
+            }
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            color: #475569;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+            .nav-item i {
+                width: 24px;
+                font-size: 1.2rem;
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            }
+
+            .nav-item:hover:not(.active) {
+                background: #f1f5f9;
+                color: #667eea;
+            }
+
+        .user-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            color: white;
+        }
+
+            .user-card h4 {
+                font-size: 1rem;
+                opacity: 0.9;
+                margin-bottom: 5px;
+            }
+
+            .user-card p {
+                font-weight: 600;
+                font-size: 1.1rem;
+            }
+
+        /* Основной контент */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Верхняя панель */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 8px 20px;
+            width: 300px;
+        }
+
+            .search-box i {
+                color: #94a3b8;
+                margin-right: 10px;
+            }
+
+            .search-box input {
+                border: none;
+                background: none;
+                outline: none;
+                width: 100%;
+                font-size: 0.95rem;
+            }
+
+        .auth-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #authBadge {
+            background: #f1f5f9;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+            .btn-outline:hover {
+                border-color: #667eea;
+                color: #667eea;
+            }
+
+        /* Сетка карточек */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+            .card-header i {
+                width: 50px;
+                height: 50px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                border-radius: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.4rem;
+            }
+
+            .card-header h3 {
+                font-size: 1.2rem;
+                font-weight: 700;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #64748b;
+                margin-bottom: 5px;
+                text-transform: uppercase;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 12px 16px;
+                border: 1px solid #e2e8f0;
+                border-radius: 16px;
+                font-size: 0.95rem;
+                transition: all 0.2s;
+                background: white;
+            }
+
+                .form-group input:focus {
+                    outline: none;
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                }
+
+        /* Таблица */
+        .table-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+            .table-header h2 {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 1.4rem;
+            }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 18px 16px;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 2px solid #e2e8f0;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        .id-badge {
+            background: #eef2ff;
+            color: #667eea;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: none;
+            background: none;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .action-btn.edit:hover {
+                background: #eef2ff;
+                color: #667eea;
+            }
+
+            .action-btn.delete:hover {
+                background: #fee2e2;
+                color: #ef4444;
+            }
+
+        /* Toast уведомление */
+        .toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: white;
+            color: #1a1f36;
+            padding: 16px 28px;
+            border-radius: 50px;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+            .toast.show {
+                transform: translateX(0);
+            }
+
+        .loading-row td {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #10b981;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Вкладки внутри карточки */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 40px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #64748b;
+        }
+
+            .tab.active {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+            }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Левая навигация -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>CustomersAPI</h1>
+                <p>Modern Dashboard</p>
+            </div>
+
+            <div class="nav-menu">
+                <div class="nav-item active">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Дашборд</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Клиенты</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Счета</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>Календарь</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-gear"></i>
+                    <span>Настройки</span>
+                </div>
+            </div>
+
+            <!-- Карточка пользователя -->
+            <div class="user-card" id="userCard" style="display: none;">
+                <h4 id="userNameCard">Пользователь</h4>
+                <p id="userEmailCard">email@example.com</p>
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <span class="badge badge-success" id="userStatusCard">Активен</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="main-content">
+            <!-- Верхняя панель -->
+            <div class="top-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Поиск клиентов...">
+                </div>
+                <div class="auth-status">
+                    <span id="authBadge"><i class="fas fa-lock"></i> Не авторизован</span>
+                    <button class="btn btn-outline" id="logoutBtn" style="display: none;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+                </div>
+            </div>
+
+            <!-- Сетка карточек -->
+            <div class="cards-grid">
+                <!-- Карточка авторизации -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-key"></i>
+                        <h3>Авторизация</h3>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab active" id="tabLoginBtn">Вход</button>
+                        <button class="tab" id="tabRegisterBtn">Регистрация</button>
+                    </div>
+
+                    <!-- Форма входа -->
+                    <div id="loginForm">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="loginEmail" placeholder="user@example.com" value="su@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль</label>
+                            <input type="password" id="loginPassword" placeholder="••••••••" value="password">
+                        </div>
+                        <button class="btn btn-primary" id="loginBtn" style="width: 100%;"><i class="fas fa-arrow-right-to-bracket"></i> Войти</button>
+                    </div>
+
+                    <!-- Форма регистрации (скрыта) -->
+                    <div id="registerForm" style="display: none;">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="regEmail" placeholder="new@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль</label>
+                            <input type="password" id="regPassword" placeholder="минимум 6 символов">
+                        </div>
+                        <div class="form-group">
+                            <label>Имя</label>
+                            <input type="text" id="regName" placeholder="Иван Петров">
+                        </div>
+                        <div class="form-group">
+                            <label>Адрес</label>
+                            <input type="text" id="regAddress" placeholder="г. Москва">
+                        </div>
+                        <button class="btn btn-primary" id="registerBtn" style="width: 100%;"><i class="fas fa-user-plus"></i> Зарегистрироваться</button>
+                    </div>
+                </div>
+
+                <!-- Карточка добавления клиента -->
+                <div class="card" id="addCard">
+                    <div class="card-header">
+                        <i class="fas fa-user-plus"></i>
+                        <h3>Добавить клиента</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input type="text" id="newName" placeholder="Иван Петров">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="newEmail" placeholder="ivan@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Адрес</label>
+                        <input type="text" id="newAddress" placeholder="г. Москва">
+                    </div>
+                    <button class="btn btn-primary" id="addBtn" style="width: 100%;"><i class="fas fa-save"></i> Сохранить</button>
+                </div>
+
+                <!-- Карточка статистики -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-simple"></i>
+                        <h3>Статистика</h3>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Всего клиентов</p>
+                            <p style="font-size: 2rem; font-weight: 700; color: #667eea;" id="totalClients">0</p>
+                        </div>
+                        <div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Активных</p>
+                            <p style="font-size: 2rem; font-weight: 700; color: #10b981;" id="activeSessions">0</p>
+                        </div>
+                    </div>
+                    <div style="background: #f1f5f9; border-radius: 30px; padding: 15px;">
+                        <p style="color: #475569;"><i class="fas fa-circle" style="color: #667eea; font-size: 0.6rem;"></i> JWT токен активен</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Секция таблицы -->
+            <div class="table-section">
+                <div class="table-header">
+                    <h2><i class="fas fa-table" style="color: #667eea;"></i> Список клиентов</h2>
+                    <button class="btn btn-outline" id="refreshBtn"><i class="fas fa-sync-alt"></i> Обновить</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Имя</th>
+                                <th>Email</th>
+                                <th>Адрес</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr class="loading-row">
+                                <td colspan="5"><i class="fas fa-lock"></i> Войдите для просмотра данных</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast уведомление -->
+    <div id="toast" class="toast"><i class="fas fa-bell" style="color: #667eea;"></i> <span id="toastMsg">Сообщение</span></div>
+
+    <script>
+        (function () {
+            // --- Конфигурация ---
+            const API_BASE = 'http://localhost:5023';
+            const AUTH_LOGIN_URL = API_BASE + '/api/auth/login';
+            const AUTH_REGISTER_URL = API_BASE + '/api/auth/register';
+            const CUSTOMERS_URL = API_BASE + '/api/customer';
+
+            let token = localStorage.getItem('jwtToken') || null;
+
+            // DOM элементы
+            const authBadge = document.getElementById('authBadge');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const userCard = document.getElementById('userCard');
+            const userNameCard = document.getElementById('userNameCard');
+            const userEmailCard = document.getElementById('userEmailCard');
+            const addCard = document.getElementById('addCard');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const tableBody = document.getElementById('tableBody');
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const totalClients = document.getElementById('totalClients');
+            const activeSessions = document.getElementById('activeSessions');
+
+            // Поля ввода
+            const loginEmail = document.getElementById('loginEmail');
+            const loginPassword = document.getElementById('loginPassword');
+            const loginBtn = document.getElementById('loginBtn');
+            const regEmail = document.getElementById('regEmail');
+            const regPassword = document.getElementById('regPassword');
+            const regName = document.getElementById('regName');
+            const regAddress = document.getElementById('regAddress');
+            const registerBtn = document.getElementById('registerBtn');
+            const newName = document.getElementById('newName');
+            const newEmail = document.getElementById('newEmail');
+            const newAddress = document.getElementById('newAddress');
+            const addBtn = document.getElementById('addBtn');
+
+            // Вкладки
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabLogin = document.getElementById('tabLoginBtn');
+            const tabRegister = document.getElementById('tabRegisterBtn');
+
+            // Утилиты
+            function showToast(text, isError = false) {
+                toastMsg.innerText = text;
+                toast.style.borderLeftColor = isError ? '#ef4444' : '#667eea';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // Обновление UI
+            function updateUI() {
+                if (token) {
+                    authBadge.innerHTML = '<i class="fas fa-unlock-alt" style="color:#10b981;"></i> Авторизован';
+                    logoutBtn.style.display = 'inline-flex';
+                    userCard.style.display = 'block';
+                    addCard.classList.remove('disabled');
+                    refreshBtn.disabled = false;
+
+                    try {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        userEmailCard.innerText = payload.email || '—';
+                        userNameCard.innerText = payload.unique_name || 'Пользователь';
+                    } catch (e) { }
+
+                    loadCustomers();
+                } else {
+                    authBadge.innerHTML = '<i class="fas fa-lock"></i> Не авторизован';
+                    logoutBtn.style.display = 'none';
+                    userCard.style.display = 'none';
+                    addCard.classList.add('disabled');
+                    refreshBtn.disabled = true;
+                    tableBody.innerHTML = '<tr class="loading-row"><td colspan="5"><i class="fas fa-lock"></i> Войдите для просмотра данных</td></tr>';
+                    totalClients.innerText = '0';
+                    activeSessions.innerText = '0';
+                }
+            }
+
+            // Загрузка клиентов
+            async function loadCustomers() {
+                if (!token) return;
+
+                tableBody.innerHTML = '<tr class="loading-row"><td colspan="5"><i class="fas fa-spinner fa-spin"></i> Загрузка...</td></tr>';
+
+                try {
+                    const response = await fetch(CUSTOMERS_URL, {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+
+                    if (response.status === 401) {
+                        token = null;
+                        localStorage.removeItem('jwtToken');
+                        updateUI();
+                        showToast('Сессия истекла', true);
+                        return;
+                    }
+
+                    if (!response.ok) throw new Error('Ошибка загрузки');
+
+                    const customers = await response.json();
+
+                    totalClients.innerText = customers.length;
+                    activeSessions.innerText = '1';
+
+                    if (customers.length === 0) {
+                        tableBody.innerHTML = '<tr class="loading-row"><td colspan="5">Нет клиентов</td></tr>';
+                        return;
+                    }
+
+                    let html = '';
+                    customers.forEach(c => {
+                        html += `<tr>
+                                <td><span class="id-badge">#${c.id}</span></td>
+                                <td><strong>${escapeHtml(c.name || '—')}</strong></td>
+                                <td>${escapeHtml(c.email || '—')}</td>
+                                <td>${escapeHtml(c.address || '—')}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn edit" onclick="editCustomer(${c.id})"><i class="fas fa-pen"></i></button>
+                                        <button class="action-btn delete" onclick="deleteCustomer(${c.id})"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                    });
+                    tableBody.innerHTML = html;
+
+                } catch (err) {
+                    tableBody.innerHTML = '<tr class="loading-row"><td colspan="5">Ошибка загрузки</td></tr>';
+                    showToast(err.message, true);
+                }
+            }
+
+            // CRUD операции
+            window.editCustomer = async function (id) {
+                const name = prompt('Новое имя:');
+                if (!name) return;
+                const email = prompt('Новый email:');
+                if (!email) return;
+                const address = prompt('Новый адрес:') || '';
+
+                try {
+                    const response = await fetch(`${CUSTOMERS_URL}/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({ id, name, email, address })
+                    });
+
+                    if (!response.ok) throw new Error('Ошибка обновления');
+
+                    showToast('Клиент обновлен');
+                    loadCustomers();
+                } catch (err) {
+                    showToast(err.message, true);
+                }
+            };
+
+            window.deleteCustomer = async function (id) {
+                if (!confirm('Удалить клиента?')) return;
+
+                try {
+                    const response = await fetch(`${CUSTOMERS_URL}/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+
+                    if (!response.ok) throw new Error('Ошибка удаления');
+
+                    showToast('Клиент удален');
+                    loadCustomers();
+                } catch (err) {
+                    showToast(err.message, true);
+                }
+            };
+
+            // Добавление клиента
+            addBtn.addEventListener('click', async () => {
+                if (!token) return;
+
+                const name = newName.value.trim();
+                const email = newEmail.value.trim();
+                const address = newAddress.value.trim();
+
+                if (!name || !email) {
+                    showToast('Имя и email обязательны', true);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(CUSTOMERS_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({ name, email, address })
+                    });
+
+                    if (!response.ok) throw new Error('Ошибка создания');
+
+                    showToast('Клиент добавлен');
+                    newName.value = '';
+                    newEmail.value = '';
+                    newAddress.value = '';
+                    loadCustomers();
+                } catch (err) {
+                    showToast(err.message, true);
+                }
+            });
+
+            // Вход
+            async function login(email, password) {
+                try {
+                    const response = await fetch(AUTH_LOGIN_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        showToast('Ошибка: ' + (data.error || 'Неверные данные'), true);
+                        return;
+                    }
+
+                    token = data.token;
+                    localStorage.setItem('jwtToken', token);
+                    updateUI();
+                    showToast('Успешный вход');
+
+                } catch (err) {
+                    showToast('Ошибка соединения', true);
+                }
+            }
+
+            // Регистрация
+            async function register(email, password, name, address) {
+                try {
+                    const response = await fetch(AUTH_REGISTER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password, name, address })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        showToast('Ошибка: ' + (data.error || 'Регистрация не удалась'), true);
+                        return;
+                    }
+
+                    showToast('Регистрация успешна, войдите');
+
+                    // Переключаемся на вход
+                    loginForm.style.display = 'block';
+                    registerForm.style.display = 'none';
+                    tabLogin.classList.add('active');
+                    tabRegister.classList.remove('active');
+
+                    // Очищаем поля
+                    regEmail.value = '';
+                    regPassword.value = '';
+                    regName.value = '';
+                    regAddress.value = '';
+
+                } catch (err) {
+                    showToast('Ошибка соединения', true);
+                }
+            }
+
+            loginBtn.addEventListener('click', () => {
+                login(loginEmail.value, loginPassword.value);
+            });
+
+            registerBtn.addEventListener('click', () => {
+                const email = regEmail.value.trim();
+                const password = regPassword.value.trim();
+                const name = regName.value.trim();
+                const address = regAddress.value.trim();
+
+                if (!email || !password || !name) {
+                    showToast('Заполните все поля', true);
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showToast('Пароль должен быть не менее 6 символов', true);
+                    return;
+                }
+
+                register(email, password, name, address);
+            });
+
+            logoutBtn.addEventListener('click', () => {
+                token = null;
+                localStorage.removeItem('jwtToken');
+                updateUI();
+                showToast('Вы вышли');
+            });
+
+            refreshBtn.addEventListener('click', () => {
+                if (token) loadCustomers();
+            });
+
+            // Переключение вкладок
+            tabLogin.addEventListener('click', () => {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+            });
+
+            tabRegister.addEventListener('click', () => {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+            });
+
+            // Инициализация
+            updateUI();
+
+            window.editCustomer = editCustomer;
+            window.deleteCustomer = deleteCustomer;
+        })();
+    </script>
+</body>
+</html>

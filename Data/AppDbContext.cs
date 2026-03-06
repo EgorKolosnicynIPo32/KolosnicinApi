@@ -1,6 +1,5 @@
-using Kolosnycin.Models;
 using Microsoft.EntityFrameworkCore;
-
+using Kolosnycin.Models;
 
 namespace Kolosnycin.Data;
 

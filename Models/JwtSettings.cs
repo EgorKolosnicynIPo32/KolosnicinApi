@@ -1,4 +1,4 @@
-namespace  Kolosnycin.Models;
+namespace Kolosnycin.Models;
 
 public class JwtSettings
 {

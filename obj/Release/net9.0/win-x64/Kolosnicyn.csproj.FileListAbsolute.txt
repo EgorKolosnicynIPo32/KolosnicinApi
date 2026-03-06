@@ -447,7 +447,6 @@ C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\rjimswa.dswa.cache.
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\rjsmrazor.dswa.cache.json
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\rjsmcshtml.dswa.cache.json
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\scopedcss\bundle\Kolosnicyn.styles.css
-C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\compressed\mwy81wmvk2-{0}-5ipweew5fc-5ipweew5fc.gz
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\staticwebassets.build.json
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\staticwebassets.build.json.cache
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\staticwebassets.development.json
@@ -459,3 +458,4 @@ C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\refint\Kolosnicyn.d
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\Kolosnicyn.pdb
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\Kolosnicyn.genruntimeconfig.cache
 C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\ref\Kolosnicyn.dll
+C:\Users\valtu\Desktop\Kolosnicyn\obj\Release\net9.0\win-x64\compressed\mwy81wmvk2-{0}-mm3j6demzj-mm3j6demzj.gz
